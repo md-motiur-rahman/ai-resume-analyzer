@@ -5,8 +5,25 @@ import Navbar from '~/components/Navbar'
 const upload = () => {
     const [isProcessing, setIsProcessing] = useState(false)
     const [statusText, setStatusText] = useState('')
+     const [file, setFile] = useState<File | null>(null)
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {}
+    const handleFileSelect = (file: File | null) => {
+        setFile(file);
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const form = e.currentTarget.closest('form') as HTMLFormElement;
+        if(!form) return;
+
+        const formData = new FormData(form);
+        
+        const companyName = formData.get('company-name') as string;
+        const jobTitle = formData.get('job-title') as string;
+        const jobDescription = formData.get('job-description') as string;
+
+        //alert('Company Name: ' + companyName + '\nJob Title: ' + jobTitle + '\nJob Description: ' + jobDescription + '\nFile: ' + (file ? file.name : 'No file selected'));
+    }
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">
       <Navbar />
@@ -40,7 +57,7 @@ const upload = () => {
                         </div>
                         <div className="form-div">
                             <label htmlFor="uploader">Upload Your Resume</label>
-                            <FileUploader/>
+                            <FileUploader onFileSelect={handleFileSelect}/>
                         </div>
                         <button type="submit" className='primary-button'>Analyz Resume</button>
                     </form>
